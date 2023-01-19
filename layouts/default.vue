@@ -3,13 +3,13 @@
         <NavbarBar />
         <div class="flex flex-row"> 
             <NavbarSideMenu />
-            <div class="mt-24 justify-between flex flex-col bg-secondary" :class="UI.menuTrigger ? 'md:block max-md:block max-sm:hidden ':'sm:block'">
+            <div class="mt-24 justify-between flex flex-col bg-secondary">
                 <div class="min-h-[64vh] bg-primary">
                     <slot />
                 </div>
-                <div class="min-h-[200px] relative oceanBackground bg-primary" :class="UI.menuTrigger ? 'min-w-[100vw] duration-200 ' : 'min-w-[100vw] duration-200'">
+                <!-- <div class="min-h-[200px] relative oceanBackground bg-primary" :class="UI.menuTrigger ? 'min-w-[100vw]' : 'min-w-[100vw]'">
                     <FooterOcean />
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

@@ -4,6 +4,10 @@
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Et enim voluptatem earum aliquam quo explicabo tempora ipsa accusamus harum, inventore sit dolorum, error fugit, sequi dolorem. Consequuntur, iusto. Sunt, eum!
   </div>
 </template>
-<script setup>
-    
+<script>
+    export default {
+      setup(){
+        
+      }
+    }
 </script>

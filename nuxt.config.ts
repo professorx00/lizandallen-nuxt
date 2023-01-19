@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
   },
   modules: [
-    // ...
+    '@nuxtjs/supabase',
     "@pinia/nuxt",
   ],
 });
