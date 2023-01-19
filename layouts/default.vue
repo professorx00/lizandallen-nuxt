@@ -1,16 +1,15 @@
 <template>
-    <div class="w-full min-h-screen bg-primary overflow-hidden">
+    <div class="w-full min-h-screen bg-primary">
         <NavbarBar />
         <div class="flex flex-row"> 
             <NavbarSideMenu />
-            <div class="mt-24 justify-between flex flex-col bg-secondary">
-                <div class="min-h-[64vh] bg-primary">
-                    <slot />
-                </div>
-                <!-- <div class="min-h-[200px] relative oceanBackground bg-primary" :class="UI.menuTrigger ? 'min-w-[100vw]' : 'min-w-[100vw]'">
-                    <FooterOcean />
-                </div> -->
+            <div></div>
+            <div class="container flex flex-col bg-primary mt-20">
+                <slot />
             </div>
+        </div>
+        <div class="min-h-[200px] relative oceanBackground bg-primary" :class="UI.menuTrigger ? 'min-w-[100vw]' : 'min-w-[100vw]'">
+                <FooterOcean />
         </div>
     </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
-        <div class="min-h-[88vh] shadow-secondary shadow-xl duration-300 z-50 max-sm:z-10" :class="UI.menuTrigger ? 'min-w-[20vw] max-sm:min-w-full ': 'min-w-[5vw] max-sm:min-w-0 max-sm:opacity-0 max-sm:absolute max-sm:-z-10'">
-            <div class="flex flex-col min-h-full bg-secondary">
+        <div class="min-h-[88vh] bg-secondary shadow-secondary shadow-xl duration-300 z-50 max-sm:z-10" :class="UI.menuTrigger ? 'min-w-[20vw] max-sm:min-w-full ': 'min-w-[5vw] max-sm:min-w-0 max-sm:opacity-0 max-sm:absolute max-sm:-z-10'">
+            <div class="mt-6 flex flex-col bg-secondary">
                 <div class="flex flex-row justify-end  z-50">
                     <div class="relative bg-primary rounded-full p-2 shadow-slate-800 shadow-sm h-10 w-10 left-6 max-sm:hidden">
                             <button class="text-center duration-200" :class="UI.menuTrigger ? 'opacity-0 absolute':'opacity-100' " @click="UI.toggleMenu"> <ChevronDoubleRightIcon class="h-6 w-6 text-white hover:text-secondary text-center" />  </button>
