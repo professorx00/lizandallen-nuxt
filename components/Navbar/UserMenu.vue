@@ -1,13 +1,13 @@
 <template>
     <ul>
         <li @click="UI.toggleUserPop">
-            <NuxtLink to="/auth/login" class="hover:text-secondary">Log In</NuxtLink>
+            <NuxtLink to="/auth/login" @click="UI.toggleUserPop" class="hover:text-secondary text-3xl">Log In</NuxtLink>
         </li>
         <li @click="UI.toggleUserPop">
-            <NuxtLink to="/profile/1">Profile</NuxtLink>
+            <NuxtLink to="/profile/1" @click="UI.toggleUserPop" class="hover:text-secondary text-3xl">Profile</NuxtLink>
         </li>
         <li @click="UI.toggleUserPop">
-            <NuxtLink to="/auth/logout">Log Out</NuxtLink>
+            <NuxtLink to="/auth/logout" @click="UI.toggleUserPop" class="hover:text-secondary text-3xl">Log Out</NuxtLink>
         </li>
     </ul>
 </template>

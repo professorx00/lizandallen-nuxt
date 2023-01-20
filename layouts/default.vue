@@ -3,14 +3,16 @@
         <NavbarBar />
         <div class="flex flex-row"> 
             <NavbarSideMenu />
-            <div></div>
-            <div class="container flex flex-col bg-primary mt-20">
-                <slot />
+            <div class="container flex flex-col bg-primary mt-20 " :class="UI.menuTrigger ? 'min-w-[80vw]' : 'min-w-[90vw]'">
+                <div class="mx-20 mt-6 min-h-[88vh] overflow-auto ">
+                    <slot />
+                </div>
             </div>
         </div>
-        <div class="min-h-[200px] relative oceanBackground bg-primary" :class="UI.menuTrigger ? 'min-w-[100vw]' : 'min-w-[100vw]'">
+        <div class="min-h-[200px] relative oceanBackground bg-primary min-w-[100vw]">
                 <FooterOcean />
         </div>
+        <FooterContent />
     </div>
 </template>
 

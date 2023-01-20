@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Allens", "heroicons"]
+  "cSpell.words": [
+    "Allens",
+    "heroicons",
+    "nuxtjs",
+    "pinia",
+    "supabase",
+    "tailwindcss"
+  ]
 }

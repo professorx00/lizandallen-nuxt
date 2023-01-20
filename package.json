@@ -18,6 +18,8 @@
     "@heroicons/vue": "^2.0.13",
     "@nuxtjs/axios": "^5.13.6",
     "@pinia/nuxt": "^0.4.6",
-    "pinia": "^2.0.29"
+    "pinia": "^2.0.29",
+    "vee-validate": "^4.7.3",
+    "yup": "^0.32.11"
   }
 }

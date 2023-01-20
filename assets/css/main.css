@@ -15,7 +15,7 @@
 
 .oceanBackground {
   position: relative;
-  /* background:radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,1) 2%, #ffc57e 100%); */
+  background:radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,0.3) 2%, #ffc57e 100%);
   overflow: hidden;
 }
 
