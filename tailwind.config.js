@@ -7,6 +7,7 @@ module.exports = {
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
     "./app.vue",
+    "./node_modules/flowbite.{js,ts}",
   ],
   theme: {
     extend: {
@@ -19,7 +20,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/aspect-ratio'),
-  ],
+  plugins: [require("@tailwindcss/aspect-ratio"), require("flowbite")],
 };

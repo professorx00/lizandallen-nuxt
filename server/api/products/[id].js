@@ -208,5 +208,8 @@ const tempProducts = [
 ];
 
 export default defineEventHandler(async (event) => {
-  return tempProducts;
+  const { id } = event.context.params;
+  const index = tempProducts.findIndex((product) => product.id == id);
+
+  return tempProducts[index];
 });

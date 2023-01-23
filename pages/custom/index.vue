@@ -3,17 +3,25 @@
     <VForm @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, meta }" class="flex flex-col justify-center items-center min-w-[45vw]">
         <div><h1 class="text-6xl text-center">CUSTOM ORDER</h1></div>
         <div class="p-2 text-3xl min-w-[45vw] justify-items-center items-center text-center">
-                <div>
-                    <label for="fName" >First Name</label>
-                    <VField name="fName" class="ml-4 rounded-md w-70 max-sm:w-56 px-2" placeholder="Joe"/>
-                    <label for="lName" class="ml-3">Last Name</label>
-                    <VField name="lName" class="ml-4 rounded-md w-70 max-sm:w-56 px-2" placeholder="Smith" />
+                <div class="flex flex-wrap w-full justify-center items-center text-center">
+                    <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
+                        <label for="fName" >First Name</label>
+                        <VField name="fName" class="ml-4 rounded-md w-9/12 px-2" placeholder="Joe"/>
+                    </div>
+                    <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
+                        <label for="lName" class="ml-3">Last Name</label>
+                        <VField name="lName" class="ml-4 rounded-md w-9/12 px-2" placeholder="Smith" />
+                    </div>
                 </div>
-                <div class="mt-3">
-                    <label for="email" >Email</label>
-                    <VField name="email" class="ml-4 rounded-md w-70 max-sm:w-56 px-2" placeholder="joe@joe.com" />
-                    <label for="phone">Phone</label>
-                    <VField name="phone" as="input" class="ml-4 rounded-md w-70 max-sm:w-56 px-2" placeholder="111-111-1111"/>
+                <div class="flex flex-wrap w-full justify-center items-center text-center">
+                    <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
+                        <label for="email" >Email</label>
+                        <VField name="email" class="ml-4 rounded-md w-10/12 px-2" placeholder="joe@joe.com" />
+                    </div>
+                    <div class="my-2 max-sm:w-11/12  w-2/4 text-left">
+                        <label for="phone">Phone</label>
+                        <VField name="phone" as="input" class="ml-4 rounded-md w-10/12 px-2" placeholder="111-111-1111"/>
+                    </div>
                 </div>
                 <div class="flex flex-col text-left">
                     <label for="describe" >Description</label>

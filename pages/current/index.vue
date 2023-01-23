@@ -19,7 +19,7 @@
           </div>
           <div class="text-right flex flex-row">
               <p class="text-lg font-medium text-gray-900">{{ item.price }}</p>
-                <button class="p-1 w-6 h-6 bg-secondary rounded-full text-center justify-center items-center flex ml-1"> ADD</button>
+                <button @click="()=>{cart.addItem(item); cart.getTotal()}" class="p-1 w-6 h-6 bg-secondary rounded-full text-center justify-center items-center flex ml-1"> ADD</button>
           </div>
         </div>
       </div>
@@ -31,13 +31,14 @@
 </template>
 
 <script>
-
+import { useCart } from '~~/stores/cart';
 
 export default {
     async setup () {
+        const cart = useCart();
         const products = []
         let pagePending = true;
-        const {data, pending} = await useLazyFetch('https://fakestoreapi.com/products')
+        const {data, pending} = await useFetch('/api/products')
         pagePending = pending;
         if(data.value){
           data.value.forEach((item)=>{
@@ -53,7 +54,7 @@ export default {
           })
         }
         return {
-            products, pagePending
+            products, pagePending, cart
         }
     }
 }

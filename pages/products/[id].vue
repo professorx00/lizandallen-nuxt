@@ -16,7 +16,7 @@ export default defineComponent({
     async setup () {
         const {params} = useRoute()
         const {id} = params;
-        const {data,pending} = await useFetch(`https://fakestoreapi.com/products/${id}`)
+        const {data,pending} = await useFetch(`/api/products/${id}`)
 
         return {
             data,pending

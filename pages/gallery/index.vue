@@ -1,6 +1,6 @@
 <template>
     <div class="text-3xl min-w-full flex flex-col justify-center text-center relative">
-        GALLERY
+        <span class="text-7xl">GALLERY</span>
         <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             <div v-for="image in galleryImages" :key="image.id" @click="()=>{handleImagePop(image)}">
                 <img :src="image.imgsrc" :alt="image.alt" />
