@@ -22,18 +22,8 @@ export default {
     setup () {
         let popImage = ref({imgsrc:"",alt:"",url:""});
         let popUp = ref(false);
-        const galleryImages = [
-        {id:1,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:2,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:3,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:4,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:5,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:6,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:7,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:8,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:9,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        {id:10,imgsrc: 'https://via.placeholder.com/640x480.png/a59090/000000?Text=640x480', alt:"tempPlaceHolder",url:'/product/1'},
-        ]
+        const {data, pending} = useFetch('/api/gallery')
+        const galleryImages = data.value
 
         const handleImagePop = ref((image)=>{
             popUp.value=true

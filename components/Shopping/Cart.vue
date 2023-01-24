@@ -2,7 +2,7 @@
    <div>
        <div class="text-3xl flex flex-col justify-center items-center text-center">
              <span>Shopping Cart</span>
-            <table class="w-10/12 text-left text-gray-500 ">
+            <table class="w-10/12 text-left text-gray-500">
                 <thead class=" text-gray-700 uppercase bg-gray-50 ">
                     <tr>
                         <th scope="col" class="px-6 py-3">
@@ -26,9 +26,9 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex flex-row justify-center items-center text-center">
-                                <PlusIcon class="w-6 h-6" @click="()=>{cart.addItemQuantity(item.id); cart.getTotal();}"/>
+                                <PlusIcon class="w-6 h-6"  @click="()=>{addItem(item.id)}"/>
                                 <span>{{ item.quantity }}</span>
-                                <MinusIcon class="w-6 h-6" @click="()=>{cart.removeItemQuantity(item.id); cart.getTotal();}"/>
+                                <MinusIcon class="w-6 h-6" @click="()=>{removeItem(item.id)}"/>
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -58,8 +58,19 @@
         setup(){
             const UI = useUIStore()
             const cart = useCart()
-
-            return { UI, cart, formatDollars }
+            const addItem = (id) => {
+                if(UI.cartPop){
+                    cart.addItemQuantity(id)
+                    cart.getTotal()
+                }  
+            }
+            const removeItem = (id) => {
+                if(UI.cartPop){
+                    cart.removeItemQuantity(id); 
+                    cart.getTotal();
+                }  
+            }
+            return { UI, cart, formatDollars, addItem, removeItem }
         }
     }
 </script>

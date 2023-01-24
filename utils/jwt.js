@@ -1,8 +1,6 @@
 import * as jwt from "jsonwebtoken";
 
 // PRIVATE and PUBLIC key
-var i = "LizandAllen"; // Issuer
-var a = "lizandallen.com"; // Subject
 const privateKEY = process.env.PRIVATE_KEY;
 
 export const signing = async (payload, id) => {
@@ -19,12 +17,12 @@ export const verifyT = async (token) => {
   return false
 };
 
-export const decodeT = async (data) => {
-  const {token} = await data;
+export const decodeT = async (token) => {
+  console.log("token", token);
   const validToken = await jwt.default.verify(token, privateKEY);
-  if(validToken){
-    return validToken
+  if (validToken) {
+    return validToken;
   }
-  return null
+  return null;
   //returns null if token is invalid
 };

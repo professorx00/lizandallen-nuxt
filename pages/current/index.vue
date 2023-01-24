@@ -6,20 +6,20 @@
       <div v-for="item in products" class="group relative" :key="item.id">
         <NuxtLink :to="`/products/${item.id}`">
             <div class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 hover:bg-secondary cursor-pointer group-hover:opacity-75 lg:aspect-none lg:h-80">
-                <img :src="item.imgsrc" :alt="item.imgalt" class="h-full w-full object-fill object-center lg:h-full lg:w-full p-2">
+                <img :src="item.image" :alt="item.imageAlt" class="h-full w-full object-fill object-center lg:h-full lg:w-full p-2">
             </div>
         </NuxtLink>
         <div class="mt-4 flex justify-between">
           <div>
             <NuxtLink :to="`/products/${item.id}`">
-                <h3 class="text-xl text-gray-700">
+                <h3 class="text-3xl text-gray-700">
                     {{ item.name }}
                 </h3>
             </NuxtLink>
           </div>
-          <div class="text-right flex flex-row">
-              <p class="text-lg font-medium text-gray-900">{{ item.price }}</p>
-                <button @click="()=>{cart.addItem(item); cart.getTotal()}" class="p-1 w-6 h-6 bg-secondary rounded-full text-center justify-center items-center flex ml-1"> ADD</button>
+          <div class="text-right flex flex-col">
+              <p class="text-5xl font-medium text-gray-900">{{ formatDollars(item.price) }}</p>
+              <button @click="()=>{cart.addItem(item); cart.getTotal()}" class="p-1 w-12 h-8 shadow-lg border border-black bg-secondary rounded-md text-4xl text-center justify-center items-center flex ml-1 hover:bg-slate-500"> ADD</button>
           </div>
         </div>
       </div>
@@ -32,29 +32,22 @@
 
 <script>
 import { useCart } from '~~/stores/cart';
+import { useAuth } from '~~/stores/auth';
+import { formatDollars } from '~~/utils/money';
 
 export default {
     async setup () {
         const cart = useCart();
+        const auth = useAuth();
         const products = []
         let pagePending = true;
         const {data, pending} = await useFetch('/api/products')
         pagePending = pending;
-        if(data.value){
-          data.value.forEach((item)=>{
-              const temp = {
-                  name: item.title,
-                  price: item.price,
-                  imgsrc: item.image,
-                  imgalt: item.title,
-                  id: item.id,
-                  color: item.rating.rate
-              }
-              products.push(temp)
-          })
-        }
+        data.forEach(product => {
+            products.push(product)
+        })
         return {
-            products, pagePending, cart
+            products, pagePending, cart, auth, formatDollars
         }
     }
 }

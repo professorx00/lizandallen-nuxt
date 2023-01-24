@@ -69,16 +69,16 @@
     const VField = Field
     const VErrorMessage = ErrorMessage
     const auth = useAuth()
-
+    const cookieToken = useCookie('token')
    const onSubmit = async (value, actions)=>{
         const  {email,password,firstName,lastName,phone} = value;
         const {data} = await useFetch('/api/auth/signup',{method: 'POST', body:{email,password,firstName,lastName,phone}});
         if(data.value){
             if(data.value.statusCode === 400){
                 actions.setFieldError('email', 'User Already Exist with this email')
-                localStorage.removeItem('token')
+                cookieToken.remove()
             }else{
-                localStorage.setItem("token", data.value.token)
+                cookieToken.set(data.value.token)
             }
         }else{
             actions.FieldError('email', 'Registration Error Please Try Again')

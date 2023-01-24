@@ -20,6 +20,13 @@ export const useAuth = defineStore("auth", {
         const {token, id, email, firstName,lastName} = data;
         this.user = {token,id,email,firstName,lastName}
       }
+    },
+    async authenticateToken(token){
+      const {data} = await useFetch("/api/auth/token", {method: 'POST', body: token})
+      if(data){
+        const {id, email, firstName,lastName, role} = data.value;
+        this.user = {id,email,firstName,lastName, role}
+      }
     }
   },
 });

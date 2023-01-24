@@ -37,7 +37,7 @@
                         </NuxtLink>
                     </div>
                      <!--ORDERS ICON-->
-                     <div class="flex flex-row justify-center items-center text-center cursor-pointer my-2 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
+                     <div v-if="auth?.user" class="flex flex-row justify-center items-center text-center cursor-pointer my-2 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
                         <NuxtLink to="/orders" class="flex flex-row items-center relative">
                             <ClipboardDocumentIcon class="h-8 w-8 max-md:h-6 max-md:w-6 max-sm:h-8 max-sm:w-8 mx-2" :class="UI.menuTrigger ? '': ''"/>
                             <span class="text-3xl duration-300 max-md:text-xl max-sm:text-3xl" :class="UI.menuTrigger ? '': 'invisible opacity-0 hidden'">Orders</span>
@@ -65,7 +65,7 @@
                         </NuxtLink>
                     </div>
                 </div>
-                <div v-if="auth?.user?.role == 'admin'" >
+                <div v-if="auth?.user?.role == 'ADMIN'" >
                     <!--Modify Products ICON-->
                     <div class="flex flex-row justify-center items-center text-center cursor-pointer my-2 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
                         <NuxtLink to="/admin/products" class="flex flex-row items-center relative">
@@ -112,10 +112,10 @@
                     </div>
                     <!--Logout ICON-->
                     <div v-if="auth.user" class="flex flex-row justify-center items-center text-center cursor-pointer my-20 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
-                        <NuxtLink to="/auth/logout" class="flex flex-row items-center relative">
+                        <button to="/auth/logout" class="flex flex-row items-center relative" @click="()=>{useLogout()}">
                             <ArrowLeftOnRectangleIcon class="h-8 w-8 max-md:h-6 max-md:w-6 max-sm:h-8 max-sm:w-8 mx-2" :class="UI.menuTrigger ? '': ''"/>
                             <span class="text-3xl duration-300 max-md:text-xl max-sm:text-3xl" :class="UI.menuTrigger ? '': 'invisible opacity-0 hidden'">Log Out</span>
-                        </NuxtLink>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -151,8 +151,15 @@ export default {
       setup(){
         const UI = useUIStore();
         const auth = useAuth();
-        
-        return { UI, auth }
+        const router = useRouter();
+        const cookie = useCookie('token');
+         const useLogout = async()=>{
+                const {data} = await useFetch('/api/auth/logout')
+                cookie.value=null
+                auth.setUser(null)
+                router.push('/auth/login')
+            }        
+        return { UI, auth, useLogout }
     }
 }
 </script>

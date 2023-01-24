@@ -1,35 +1,6 @@
 import { defineStore } from "pinia";
 
-const tempCart = [
-  {
-    id: 375689,
-    product: "Product 1",
-    price: 10,
-    quantity: 1,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 375688,
-    product: "Product 2",
-    price: 5,
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 375687,
-    product: "Product 3",
-    price: 1,
-    quantity: 6,
-    image: "https://picsum.photos/200/300",
-  },
-  {
-    id: 375686,
-    product: "Product 4",
-    price: 2,
-    quantity: 3,
-    image: "https://picsum.photos/200/300",
-  },
-];
+const tempCart = [];
 
 export const useCart = defineStore("cart", {
   state: () => ({ items: tempCart, total: 37.0, totalItems: 0 }),

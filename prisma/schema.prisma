@@ -84,6 +84,7 @@ model Carts{
   updatedAt DateTime @updatedAt
   orderID   Int @unique
   Orders    Orders @relation(fields: [orderID], references: [id])
+  status    OrderStatus @default(CREATED)
   CartProducts CartProducts[]
 }
 
@@ -108,8 +109,8 @@ model Products{
   image     String
   imageAlt  String
   inventory Int @default(0)
-  leftInStock Int @default(0)
   carts     CartProducts[]
+  isActive  Boolean @default(true)
 }
 
 model Messages{
@@ -151,6 +152,12 @@ enum Response {
   IN_PROGRESS
   RESOLVED
   ARCHIVED
+}
+
+enum CartStatus {
+  CREATED
+  ARCHIVED
+  CANCELLED
 }
 
 enum OrderStatus {

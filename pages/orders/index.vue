@@ -47,11 +47,13 @@
 
 import { DateTime } from "luxon";
 import { formatDollars } from "~~/utils/money";
+import { useAuth } from "~~/stores/auth";
 export default {
     setup () {
         definePageMeta({
             middleware: 'auth'
         })
+        const { user } = useAuth()
        const orders= [
         {
             id: 1,

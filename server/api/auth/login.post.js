@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   } else {
     const compare =  await bcrypt.compare(password, user.password)
     if(compare){
-      const token = await signing({ id, email, firstName, lastName }, id);
+      const token = await signing({ id, email, firstName, lastName, role }, id);
       return {token, id, email, firstName,lastName, role}
     }
   }

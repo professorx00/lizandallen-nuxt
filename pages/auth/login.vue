@@ -42,7 +42,7 @@
         if(cookieToken.value){
             if(!user){
                 if(await verifyToken(cookieToken.value)){
-                    let {data} = await useFetch('/api/auth/getUserbyToken',{method: 'POST',body:{token: cookieToken.value}})
+                    let {data} = await useFetch('/api/auth/token',{method: 'POST',body:{token: cookieToken.value}})
                     if(data?.value){
                         auth.setUser({id: data.value.id, firstName: data.value.firstName,lastName: data.value.lastName})
                         router.push('/')
@@ -60,7 +60,7 @@
         let {data} = await useLazyFetch('/api/auth/login', {method: 'POST', body: value})
         if(data.value){
             const {token, id, email, firstName, lastName, role} = data.value
-            cookieToken.value = token
+            cookieToken.value=token
             if(verifyToken(token)){
                 auth.setUser({token,id,email,firstName,lastName,role})
                 if(role == "ADMIN"){
