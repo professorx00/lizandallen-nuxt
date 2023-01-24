@@ -37,7 +37,7 @@
                         </NuxtLink>
                     </div>
                      <!--ORDERS ICON-->
-                     <div v-if="auth.user" class="flex flex-row justify-center items-center text-center cursor-pointer my-2 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
+                     <div class="flex flex-row justify-center items-center text-center cursor-pointer my-2 mx-1 text-white rounded-md hover:text-primary hover:bg-white "  @click="()=>{if(UI.menuTrigger){UI.toggleMenu()}}">
                         <NuxtLink to="/orders" class="flex flex-row items-center relative">
                             <ClipboardDocumentIcon class="h-8 w-8 max-md:h-6 max-md:w-6 max-sm:h-8 max-sm:w-8 mx-2" :class="UI.menuTrigger ? '': ''"/>
                             <span class="text-3xl duration-300 max-md:text-xl max-sm:text-3xl" :class="UI.menuTrigger ? '': 'invisible opacity-0 hidden'">Orders</span>

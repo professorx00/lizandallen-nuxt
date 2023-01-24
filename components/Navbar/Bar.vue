@@ -2,7 +2,6 @@
     <div class="sticky top-0 h-[8vh] p-10 z-50 flex flex-row flex-auto items-center justify-between bg-secondary shadow-slate-700 shadow-xl">
         <div class="w-8 h-8 z-50 flex flex-col text-center border items-center justify-center rounded-full bg-primary hover:bg-secondary text-black hover:text-primary hover:border-primary cursor-pointer max-sm:visible invisible" @click="UI.toggleMenu"><Bars3Icon class="w-6 h-6" /></div>
         <div class="flex flex-row z-50 space-x-2">
-            <UI.cartPop />
             <div class="z-50 relative">
                 <ShoppingCartIcon class="w-8 h-8 text-primary rounded-full border p-0 m-0 cursor-pointer "  @click="UI.toggleCartPop()"/>
                 <div v-if="cart.getQuantity()>0" class="bg-primary rounded-full w-5 h-5 flex justify-center items-center text-center text-3xl absolute -right-2 -bottom-1 border border-black">

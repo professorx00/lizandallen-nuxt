@@ -1,27 +1,25 @@
+import db from '~~/stores/db'
+import bcrypt from "bcrypt";
+import { signing } from '~~/utils/jwt';
+
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { email, password } = body;
-  console.log(email);
-  const user = getUserByEmail(email);
-  console.log(user);
+  const user = await db.users.findUnique({where: {
+    email: email
+  }})
+  const {id,firstName,lastName, role} = user
   if (!user) {
     throw createError({
       statusCode: 401,
       statusMessage: "Params are incorrect",
     });
   } else {
-    return user;
+    const compare =  await bcrypt.compare(password, user.password)
+    if(compare){
+      const token = await signing({ id, email, firstName, lastName }, id);
+      return {token, id, email, firstName,lastName, role}
+    }
   }
 });
-
-const getUserByEmail = (email) => {
-  if (email == "professorx00@gmail.com") {
-    return {
-      email: "professorx00@gmail.com",
-      id: 1,
-      firstName: "Charles",
-      lastName: "Xavier",
-      role: "admin",
-    };
-  }
-};

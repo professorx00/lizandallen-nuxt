@@ -7,21 +7,24 @@ const privateKEY = process.env.PRIVATE_KEY;
 
 export const signing = async (payload, id) => {
   const newPayload = { ...payload, id };
-  return jwt.default.sign(newPayload, privateKEY);
+  return await jwt.default.sign(newPayload, privateKEY);
 };
 
-export const verifyT = async (token, email) => {
-  var verifyOptions = {
-    issuer: i,
-    subject: email,
-    audience: a,
-    expiresIn: "24h",
-    algorithm: ["RS256"],
-  };
-  return jwt.default.verify(token, privateKEY);
+export const verifyT = async (token) => {
+  const validToken = await jwt.default.verify(token, privateKEY);
+  
+  if(validToken){
+    return true
+  }
+  return false
 };
 
-export const decodeT = async (token) => {
-  return jwt.default.decode(token, { complete: true });
+export const decodeT = async (data) => {
+  const {token} = await data;
+  const validToken = await jwt.default.verify(token, privateKEY);
+  if(validToken){
+    return validToken
+  }
+  return null
   //returns null if token is invalid
 };

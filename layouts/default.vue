@@ -28,9 +28,7 @@ import {useUIStore} from '@/stores/UIStore'
 
 export default {
     setup(){
-
         const UI = useUIStore()
-        
         return { UI }
     }
 }

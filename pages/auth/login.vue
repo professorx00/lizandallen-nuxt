@@ -34,17 +34,43 @@
     const VField = Field
     const VErrorMessage = ErrorMessage
     const auth = useAuth()
+    const router = useRouter()
+    const cookieToken = useCookie('token');
+
+    onMounted(async ()=>{
+        const {user} = auth;
+        if(cookieToken.value){
+            if(!user){
+                if(await verifyToken(cookieToken.value)){
+                    let {data} = await useFetch('/api/auth/getUserbyToken',{method: 'POST',body:{token: cookieToken.value}})
+                    if(data?.value){
+                        auth.setUser({id: data.value.id, firstName: data.value.firstName,lastName: data.value.lastName})
+                        router.push('/')
+                    }
+                }
+            }else{
+                if(verifyToken(token)){
+                    router.push('/')
+                }
+            }
+        }
+    })
 
    const onSubmit = async (value, actions)=>{
-        const {data} = await useLazyFetch('/api/auth/login', {method: 'POST', body: value})
+        let {data} = await useLazyFetch('/api/auth/login', {method: 'POST', body: value})
         if(data.value){
-            const {email, id, firstName, lastName, role} = data.value
-            console.log(email, id, firstName, lastName, role)
-            auth.setUser({email:email, id:id, firstName:firstName, lastName:lastName, role:role})
-            if(role === 'admin'){
-               navigateTo('/')
+            const {token, id, email, firstName, lastName, role} = data.value
+            cookieToken.value = token
+            if(verifyToken(token)){
+                auth.setUser({token,id,email,firstName,lastName,role})
+                if(role == "ADMIN"){
+                    router.push("/admin")
+                }else{
+                    router.push('/')
+                }
             }else{
-               navigateTo('/')
+                actions.setFieldError('email', 'invalid email or password');
+                actions.setFieldError('password', 'invalid email or password');
             }
         }else{
             actions.setFieldError('email', 'invalid email or password');
@@ -52,16 +78,9 @@
         }
    }
 
+   const verifyToken = async (token) => {
+    let {data} = await useLazyFetch('/api/auth/verify',{headers: {accessToken: token}})
+    return data.value
+   } 
+
 </script>
-
-
-<!-- async (values) => {
-                const {data} = await useLazyFetch('/api/auth/login', {method: 'POST', body: values})
-                if(data.value){
-                    const {email, id, firstName, lastName, role} = data.value
-                    console.log(email, id, firstName, lastName, role)
-                }else{
-                    setFieldError('email', 'invalid email or password');
-                    setFieldError('password', 'invalid email or password');
-                }
-            } -->
