@@ -4,34 +4,36 @@
         <div><h1 class="text-6xl text-center">Modify {{product.name}}</h1></div>
         <div class="p-2 text-3xl min-w-[45vw] justify-items-center items-center text-center">
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
-                    <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
+                    <div class="my-2 max-sm:w-11/12 w-8/12 text-left">
                         <label for="name" >Product Name</label>
-                        <VField name="name" class="ml-4 rounded-md w-9/12 px-2" :placeholder="product.name"/>
+                        <VField name="name" class="ml-4 rounded-md w-8/12 px-2" :model-value="product.name" :placeholder="product.name"/>
+                        <VErrorMessage name="name"  v-if="errors && meta.touched" class="text-red-500"/>
                     </div>
-                    <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
+                    <div class="my-2 max-sm:w-11/12 w-4/12 text-left">
                         <label for="price" class="ml-3">Price</label>
-                        <VField name="price" class="ml-4 rounded-md w-9/12 px-2" type="number" :placeholder="product.price" />
+                        <VField name="price" class="ml-4 rounded-md w-4/12 px-2" type="number" :model-value="product.price" :placeholder="product.price" />
+                        <VErrorMessage name="price"  v-if="errors && meta.touched" class="text-red-500"/>
                     </div>
                 </div>
                 <div class="flex flex-col text-left">
                     <label for="describe" >Product Description</label>
-                    <VField name="describe" as="textarea"  cols="40" rows="5" class="ml-4 rounded-md w-full max-sm:w-56 px-2" />
+                    <VField name="describe" as="textarea" :model-value="product.description" cols="40" rows="5" class="ml-4 rounded-md w-full max-sm:w-56 px-2" />
+                    <VErrorMessage name="describe"  v-if="errors && meta.touched" class="text-red-500"/>
                 </div>
                 <div class="flex flex-col">
-                    <VErrorMessage name="describe"  v-if="errors && meta.touched" class="text-red-500"/>
-                    <VErrorMessage name="email"  v-if="errors && meta.touched" class="text-red-500"/>
-                    <VErrorMessage name="fName"  v-if="errors && meta.touched" class="text-red-500"/>
-                    <VErrorMessage name="lName" v-if="errors && meta.touched" class="text-red-500" />
-                    <VErrorMessage name="phone" v-if="errors && meta.touched" class="text-red-500" />
                 </div>
-                <div>
-                    <label for="image" class="ml-3">Image</label>
-                    <VField name="image" class="ml-4 rounded-md w-9/12 px-2" type="file" />
+                <div class="my-3 flex flex-row justify-start items-star">
+                    <VField name="file" v-slot="{ handleChange, value }">
+                        <input type="file" @change="handleChange" />
+                        <pre>{{ value?.file }}</pre>
+                    </VField>
                 </div>
+                <VErrorMessage name="image"  v-if="errors && meta.touched" class="text-red-500"/>
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
                     <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
-                        <label for="name" >Inventory</label>
-                        <VField name="name" type="number" class="ml-4 rounded-md w-9/12 px-2" :placeholder="product.inventory"/>
+                        <label for="inventory" >Inventory</label>
+                        <VField name="inventory" type="number" class="ml-4 rounded-md w-9/12 px-2" :model-value="product.inventory" :placeholder="product.inventory"/>
+                        <VErrorMessage name="inventory"  v-if="errors && meta.touched" class="text-red-500"/>
                     </div>
                     <div class="my-2 max-sm:w-11/12 w-2/4 text-left flex flex-row">
                         <label for="price" class="ml-3">Active</label>
@@ -55,14 +57,20 @@
     import { Form, Field, ErrorMessage, useForm  } from 'vee-validate';
     import { CheckIcon } from '@heroicons/vue/24/solid';
     import * as yup from 'yup';
+    import { ref } from 'vue';
     let success = ref(false);
     const phoneRegExp = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
     const schema = yup.object({
-        
+        name: yup.string().required(),
+        price: yup.number().required(),
+        describe: yup.string().required(),
+        inventory:yup.number().required()
     });
     const VForm = Form
     const VField = Field
     const VErrorMessage = ErrorMessage
+    const useVForm = useForm()
+    
     const route = useRoute()
     const id = route.params.id
     const {data, pending} = await useFetch(`/api/products/${id}`)
@@ -74,8 +82,11 @@
     }
    const onSubmit = async (value, actions)=>{
         console.log(value)
-        success.value = true;
+        const {data} = await useFetch('/api/fileUpload', {method: "POST",body:{image: 'hello'}})
+        console.log(data)
    }
+   let fileData = null;
+
    const handleclose = ()=>{
     success.value = false
    }
