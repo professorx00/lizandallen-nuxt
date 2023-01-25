@@ -22,11 +22,12 @@
                 </div>
                 <div class="flex flex-col">
                 </div>
-                <div class="my-3 flex flex-row justify-start items-star">
-                    <VField name="file" v-slot="{ handleChange, value }">
-                        <input type="file" @change="handleChange" />
-                        <pre>{{ value?.file }}</pre>
-                    </VField>
+                <div v-if="fileData" class="my-3 flex flex-row justify-start items-star">
+                   <VField name="image" type="file" ref="file"  @change="handleChange"/>{{ isUploading }}
+                </div>
+                <div v-if="!fileData" class="my-3 flex flex-row justify-start items-star">
+                   <img :src="product.image" class="w-20 h-20" :alt="product.imageAlt"/>
+                   <button @click="handleClear" >Clear</button>
                 </div>
                 <VErrorMessage name="image"  v-if="errors && meta.touched" class="text-red-500"/>
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
@@ -46,7 +47,7 @@
     <div v-if="success" class="bg-black/30 z-50 absolute top-0 left-0 w-full h-full flex justify-center items-center text-center">
         <div class="bg-white w-2/4 h-2/4 flex flex-col justify-center items-center text-center text-3xl rounded-xl">
             <span>Successfully submitted your message.</span> <span>Someone will contact you shortly.</span>
-            <button @click="handleclose" class="bg-primary border border-black hover:bg-slate-400 px-4 py-1 rounded-xl">Close</button>
+            <button @click="handleClose" class="bg-primary border border-black hover:bg-slate-400 px-4 py-1 rounded-xl">Close</button>
         </div>
     </div>
     </div>
@@ -56,6 +57,8 @@
 <script setup>
     import { Form, Field, ErrorMessage, useForm  } from 'vee-validate';
     import { CheckIcon } from '@heroicons/vue/24/solid';
+    import { useFBStorage } from '~~/utils/firebase'
+    import {  ref as FBRef, uploadBytes, getDownloadURL  } from "firebase/storage";
     import * as yup from 'yup';
     import { ref } from 'vue';
     let success = ref(false);
@@ -70,25 +73,48 @@
     const VField = Field
     const VErrorMessage = ErrorMessage
     const useVForm = useForm()
-    
+    const isUploading = ref("")
     const route = useRoute()
     const id = route.params.id
     const {data, pending} = await useFetch(`/api/products/${id}`)
     const product = data.value
     let isActive = ref(product.isActive)
+    let fileData = ref(null);
+    let fileInfo = ref(null);
+    
     const toggleCheck = ()=>{
         console.log("clicked")
         isActive.value = !isActive.value
     }
    const onSubmit = async (value, actions)=>{
-        console.log(value)
-        const {data} = await useFetch('/api/fileUpload', {method: "POST",body:{image: 'hello'}})
-        console.log(data)
+        if(fileData.value){
+            console.log("ok to submit", fileData.value)
+        }
    }
-   let fileData = null;
+    const handleChange = async (e)=>{
+        fileInfo = e.target.files[0]
+        isUploading.value = "Uploading..."
+        const path = "images/"+Math.floor(Math.random() * 250000)+fileInfo.name
+        const storage = useFBStorage()
+        const storageRef = FBRef(storage, path)
+        const uploadTask = await uploadBytes(storageRef, fileInfo)
+            if(uploadTask){
+                const downloadURL = await getDownloadURL(storageRef)
+                console.log(downloadURL)
+                fileData.value = downloadURL
+                isUploading.value = "Uploaded"
+            }
+            
+    }
 
-   const handleclose = ()=>{
+    const handleClear = ()=>{
+        console.log("clear")
+        fileData.value = "data waiting"
+    }
+
+   const handleClose = ()=>{
     success.value = false
+
    }
 
 </script>
