@@ -22,10 +22,12 @@
     "@prisma/client": "^4.9.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "bcrypt": "^5.1.0",
+    "firebase": "^9.16.0",
     "flowbite": "^1.6.2",
     "jsonwebtoken": "^9.0.0",
     "luxon": "^3.2.1",
     "pinia": "^2.0.29",
+    "uuid": "^9.0.0",
     "vee-validate": "^4.7.3",
     "yup": "^0.32.11"
   }
