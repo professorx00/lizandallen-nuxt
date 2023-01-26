@@ -72,7 +72,9 @@
         async setup(){
             const {data} =useFetch('/api/products')
             const products = data.value
-
+            definePageMeta({
+                middleware: 'admin'
+            })
             return {products}
         }
     }

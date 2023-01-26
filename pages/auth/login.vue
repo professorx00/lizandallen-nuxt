@@ -16,7 +16,10 @@
             </div>
             <VErrorMessage name="password" v-if="errors && meta.touched" class="text-red-500" />
         </div>
-        <button class="px-6 py-2 my-3 rounded-lg text-3xl border border-black bg-primary hover:bg-white">SUBMIT</button>
+        <div class="text-3xl flex flex-row space-x-5 justify-center items-center text-center">
+            <button class="px-6 py-2 my-3 rounded-lg text-3xl border border-black bg-primary hover:bg-white">SUBMIT</button>
+            <NuxtLink to="/auth/signup" class="hover:text-secondary">Sign Up</NuxtLink>
+        </div>
     </VForm>
 
 

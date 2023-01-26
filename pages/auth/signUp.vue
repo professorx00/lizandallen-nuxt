@@ -78,7 +78,7 @@
                 actions.setFieldError('email', 'User Already Exist with this email')
                 cookieToken.remove()
             }else{
-                cookieToken.set(data.value.token)
+                cookieToken.value=data.value.token
             }
         }else{
             actions.FieldError('email', 'Registration Error Please Try Again')

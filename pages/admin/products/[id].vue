@@ -61,6 +61,12 @@
     import {  ref as FBRef, uploadBytes, getDownloadURL  } from "firebase/storage";
     import * as yup from 'yup';
     import { ref } from 'vue';
+
+
+     definePageMeta({
+            middleware: 'admin'
+        })
+
     let success = ref(false);
     const phoneRegExp = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
     const schema = yup.object({
