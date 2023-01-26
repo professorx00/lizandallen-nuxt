@@ -1,6 +1,7 @@
 <template>
     <div class="relative">
-    <VForm @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, meta }" class="flex flex-col justify-center items-center min-w-[45vw]">
+        {{ pending }}
+        <VForm @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, meta }" class="flex flex-col justify-center items-center min-w-[45vw]">
         <div><h1 class="text-6xl text-center">Modify {{product.name}}</h1></div>
         <div class="p-2 text-3xl min-w-[45vw] justify-items-center items-center text-center">
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
@@ -22,12 +23,11 @@
                 </div>
                 <div class="flex flex-col">
                 </div>
-                <div v-if="fileData" class="my-3 flex flex-row justify-start items-star">
-                   <VField name="image" type="file" ref="file"  @change="handleChange"/>{{ isUploading }}
-                </div>
-                <div v-if="!fileData" class="my-3 flex flex-row justify-start items-star">
-                   <img :src="product.image" class="w-20 h-20" :alt="product.imageAlt"/>
-                   <button @click="handleClear" >Clear</button>
+                    
+                <div class="my-3 flex flex-row justify-start items-star">
+                    <img :src="productImage" class="w-20 h-20" :alt="product.imageAlt"/>
+                    <VField class="bg-primary mx-2" name="image" type="file" ref="file"  @change="handleChange"/>
+                    <button @click="(event)=>{event.preventDefault(); handleClear();}" class="">Clear</button>
                 </div>
                 <VErrorMessage name="image"  v-if="errors && meta.touched" class="text-red-500"/>
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
@@ -72,83 +72,78 @@
     const VForm = Form
     const VField = Field
     const VErrorMessage = ErrorMessage
-    const useVForm = useForm()
     const isUploading = ref("")
     const route = useRoute()
+    const form = useForm()
     const id = route.params.id
-    const {data, pending} = await useFetch(`/api/products/${id}`)
+    const {data, pending} = await useLazyFetch(`/api/products/${id}`)
     const product = data.value
     let isActive = ref(product.isActive)
     let fileData = ref(null);
     let fileInfo = ref(null);
+    let productImage = ref(product.image)
+    const FBConfig = useFBConfig().value
+    console.log(FBConfig)
     
     const toggleCheck = ()=>{
         console.log("clicked")
         isActive.value = !isActive.value
     }
    const onSubmit = async (value, actions)=>{
-        if(fileData.value){
-            console.log("ok to submit", fileData.value)
+        isUploading.value = "Uploading..."
+        const path = "images/"+Math.floor(Math.random() * 250000)+fileInfo.name
+        let modifiedProduct = null
+        console.log(fileInfo.value === null)
+        if(fileInfo.value === null){
+            modifiedProduct = {
+                id: product.id,
+                name: value.name,
+                description: value.describe,
+                isActive: isActive.value,
+                image: product.image,
+                imageAlt: value.name,
+                inventory: value.inventory,
+                price: value.price
+            }
+        }else {
+            const storage = useFBStorage(FBConfig)
+            const storageRef = FBRef(storage, path)
+            const uploadTask = await uploadBytes(storageRef, fileInfo)
+                if(uploadTask){
+                    const downloadURL = await getDownloadURL(storageRef)
+                    fileData.value = downloadURL
+                    isUploading.value = "Uploaded"
+                }
+                modifiedProduct = {
+                id: product.id,
+                name: value.name,
+                description: value.describe,
+                isActive: isActive.value,
+                image: fileData.value ,
+                imageAlt: value.name,
+                inventory: value.inventory,
+                price: value.price
+            }
+        }
+        if(modifiedProduct){
+            console.log(modifiedProduct)
         }
    }
     const handleChange = async (e)=>{
-        fileInfo = e.target.files[0]
-        isUploading.value = "Uploading..."
-        const path = "images/"+Math.floor(Math.random() * 250000)+fileInfo.name
-        const storage = useFBStorage()
-        const storageRef = FBRef(storage, path)
-        const uploadTask = await uploadBytes(storageRef, fileInfo)
-            if(uploadTask){
-                const downloadURL = await getDownloadURL(storageRef)
-                console.log(downloadURL)
-                fileData.value = downloadURL
-                isUploading.value = "Uploaded"
-            }
-            
+        fileInfo.value = e.target.files[0]   
+    }
+    const handleClear = ()=>{
+        ref.
+        fileInfo.value = null;
+        isUploading.value = '';
+        fileData.value = null
+        productImage.value = product.image
+        form.setFieldValue('image', null)
     }
 
-    const handleClear = ()=>{
-        console.log("clear")
-        fileData.value = "data waiting"
-    }
 
    const handleClose = ()=>{
     success.value = false
-
    }
 
-</script>
-
-
-
-
-
-
-<!-- <template>
-    <div class="text-4xl flex flex-col justify-center items-center text-center">
-        <VForm @submit="onSubmit" :validation-schema="schema">
-            <div><h1 class="text-7xl">Modify {{product.name}}</h1></div>
-            <div class="my-2 max-sm:w-11/12 w-2/4 text-left">
-                    <label for="fName" >First Name</label>
-                    <VField name="fName" class="ml-4 rounded-md w-9/12 px-2" placeholder="Joe"/>
-            </div>
-        </VForm>
-    </div>
-</template>
-    
-<script>
-    import { Form, Field, ErrorMessage, useForm  } from 'vee-validate';
-    export default {
-        async setup(){
-            const VForm = Form
-            const VField = Field
-            const VErrorMessage = ErrorMessage
-            const route = useRoute()
-            const id = route.params.id
-            const {data, pending} = await useFetch(`/api/products/${id}`)
-            const product = data.value
-            return {product, pending, VForm, VField, VErrorMessage}
-
-        }
-    }
-</script> -->
+</script> 
