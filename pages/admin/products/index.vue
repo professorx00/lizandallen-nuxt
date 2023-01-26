@@ -70,7 +70,7 @@
 <script >
     export default {
         async setup(){
-            const {data} =useFetch('/api/products')
+            const {data} = await useFetch('/api/products')
             const products = data.value
             definePageMeta({
                 middleware: 'admin'

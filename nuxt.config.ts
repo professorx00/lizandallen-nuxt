@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ["@pinia/nuxt",'nuxt-icon'],
+  modules: ["@pinia/nuxt",'nuxt-icon','@vueuse/nuxt'],
   runtimeConfig: {
       FB_APIKEY: "AIzaSyC_P_jcqvb0OfEKoEnxyjXxgZmQhVTDWds",
       FB_AUTH_DOMAIN: "liz-allen.firebaseapp.com",
