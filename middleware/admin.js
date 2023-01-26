@@ -11,9 +11,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (response.statusCode == 401) {
     return navigateTo("/auth/login");
   } else {
-    if(auth.user){
+      if(auth.user){
         if(auth.user.role !== "admin"){
             return navigateTo("/");
+        }
+      }
     }
-  }
-});
+})
