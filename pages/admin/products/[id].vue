@@ -1,6 +1,5 @@
 <template>
     <div class="relative">
-        {{ pending }}
         <VForm @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, meta }" class="flex flex-col justify-center items-center min-w-[45vw]">
         <div><h1 class="text-6xl text-center">Modify {{product.name}}</h1></div>
         <div class="p-2 text-3xl min-w-[45vw] justify-items-center items-center text-center">
@@ -26,7 +25,7 @@
                     
                 <div class="my-3 flex flex-row justify-start items-star">
                     <img :src="productImage" class="w-20 h-20" :alt="product.imageAlt"/>
-                    <VField class="bg-primary mx-2" name="image" type="file" ref="file"  @change="handleChange"/>
+                    <button @click="open({ accept: 'image/*', multiple: false })">Choose an Image</button>
                     <button @click="(event)=>{event.preventDefault(); handleClear();}" class="">Clear</button>
                 </div>
                 <VErrorMessage name="image"  v-if="errors && meta.touched" class="text-red-500"/>
@@ -56,19 +55,17 @@
 
 <script setup>
     import { Form, Field, ErrorMessage, useForm  } from 'vee-validate';
+    import { useFileDialog } from '@vueuse/core'
     import { CheckIcon } from '@heroicons/vue/24/solid';
     import { useFBStorage } from '~~/utils/firebase'
     import {  ref as FBRef, uploadBytes, getDownloadURL  } from "firebase/storage";
     import * as yup from 'yup';
     import { ref } from 'vue';
-
-
      definePageMeta({
             middleware: 'admin'
         })
-
+    const { files, open, reset } = useFileDialog()
     let success = ref(false);
-    const phoneRegExp = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
     const schema = yup.object({
         name: yup.string().required(),
         price: yup.number().required(),
@@ -82,67 +79,32 @@
     const route = useRoute()
     const form = useForm()
     const id = route.params.id
-    const {data, pending} = await useLazyFetch(`/api/products/${id}`)
+    const {data, pending} = await useFetch(`/api/products/${id}`)
     const product = data.value
     let isActive = ref(product.isActive)
-    let fileData = ref(null);
-    let fileInfo = ref(null);
     let productImage = ref(product.image)
     const FBConfig = useFBConfig().value
-    console.log(FBConfig)
+    const storage = useFBStorage(FBConfig)
     
+    const uploadFile = ()=>{
+        let fileName = files.value.item(0).name
+        let path = ''
+        FBRef(storage,)
+
+    }
+
     const toggleCheck = ()=>{
         console.log("clicked")
         isActive.value = !isActive.value
     }
    const onSubmit = async (value, actions)=>{
         isUploading.value = "Uploading..."
-        const path = "images/"+Math.floor(Math.random() * 250000)+fileInfo.name
-        let modifiedProduct = null
-        console.log(fileInfo.value === null)
-        if(fileInfo.value === null){
-            modifiedProduct = {
-                id: product.id,
-                name: value.name,
-                description: value.describe,
-                isActive: isActive.value,
-                image: product.image,
-                imageAlt: value.name,
-                inventory: value.inventory,
-                price: value.price
-            }
-        }else {
-            const storage = useFBStorage(FBConfig)
-            const storageRef = FBRef(storage, path)
-            const uploadTask = await uploadBytes(storageRef, fileInfo)
-                if(uploadTask){
-                    const downloadURL = await getDownloadURL(storageRef)
-                    fileData.value = downloadURL
-                    isUploading.value = "Uploaded"
-                }
-                modifiedProduct = {
-                id: product.id,
-                name: value.name,
-                description: value.describe,
-                isActive: isActive.value,
-                image: fileData.value ,
-                imageAlt: value.name,
-                inventory: value.inventory,
-                price: value.price
-            }
-        }
         if(modifiedProduct){
             console.log(modifiedProduct)
         }
    }
-    const handleChange = async (e)=>{
-        fileInfo.value = e.target.files[0]   
-    }
     const handleClear = ()=>{
-        ref.
-        fileInfo.value = null;
         isUploading.value = '';
-        fileData.value = null
         productImage.value = product.image
         form.setFieldValue('image', null)
     }
