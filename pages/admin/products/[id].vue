@@ -23,10 +23,14 @@
                 <div class="flex flex-col">
                 </div>
                     
-                <div class="my-3 flex flex-row justify-start items-star">
-                    <img :src="productImage" class="w-20 h-20" :alt="product.imageAlt"/>
-                    <button @click="open({ accept: 'image/*', multiple: false })">Choose an Image</button>
-                    <button @click="(event)=>{event.preventDefault(); handleClear();}" class="">Clear</button>
+                <div v-if="!files" class="my-3 flex flex-row justify-start items-center">
+                    <img  :src="productImage" class="w-20 h-20" :alt="product.imageAlt"/>
+                    <button class="bg-secondary p-4 m-2 rounded-lg hover:bg-slate-500 cursor-pointer" @click="(event)=>{event.preventDefault(); open({ accept: 'image/*', multiple: false })}">Choose an Image</button>
+                    <span>{{isUploading}}</span>
+                </div>
+                <div v-else class="my-3 flex flex-row justify-start items-center">
+                    <span>{{files?.item(0).name}}</span>
+                     <button v-if="files" class="bg-secondary p-4 m-2 rounded-lg hover:bg-slate-500 cursor-pointer" @click="(event)=>{event.preventDefault(); handleClear();}" >Clear</button>
                 </div>
                 <VErrorMessage name="image"  v-if="errors && meta.touched" class="text-red-500"/>
                 <div class="flex flex-wrap w-full justify-center items-center text-center">
@@ -57,10 +61,11 @@
     import { Form, Field, ErrorMessage, useForm  } from 'vee-validate';
     import { useFileDialog } from '@vueuse/core'
     import { CheckIcon } from '@heroicons/vue/24/solid';
-    import { useFBStorage } from '~~/utils/firebase'
-    import {  ref as FBRef, uploadBytes, getDownloadURL  } from "firebase/storage";
     import * as yup from 'yup';
     import { ref } from 'vue';
+    import {useFBStorage} from '~/utils/firebase'
+    import { ref as FBRef, uploadBytes,getDownloadURL  } from 'firebase/storage'
+    import { useProducts } from '~~/stores/products';
      definePageMeta({
             middleware: 'admin'
         })
@@ -79,18 +84,28 @@
     const route = useRoute()
     const form = useForm()
     const id = route.params.id
-    const {data, pending} = await useFetch(`/api/products/${id}`)
-    const product = data.value
+    const productStore = useProducts()
+    const product = await productStore.getProductById(id)
     let isActive = ref(product.isActive)
     let productImage = ref(product.image)
-    const FBConfig = useFBConfig().value
-    const storage = useFBStorage(FBConfig)
-    
-    const uploadFile = ()=>{
-        let fileName = files.value.item(0).name
-        let path = ''
-        FBRef(storage,)
+    const config = useFBConfig();
+    const storage = useFBStorage(config.value);
 
+    
+    const uploadFile = async ()=>{
+        try{
+            let fileName = files.value.item(0).name
+            let file = files.value.item(0)
+            const path =  `images/product/${id}_${fileName}`
+            const storageRef = FBRef(storage, path)
+            const uploaded = await uploadBytes(storageRef, file)
+            if(uploaded){
+                const url = await getDownloadURL(storageRef)
+                return {url}
+            }
+        }catch(err){
+            return err
+        }
     }
 
     const toggleCheck = ()=>{
@@ -98,15 +113,41 @@
         isActive.value = !isActive.value
     }
    const onSubmit = async (value, actions)=>{
+    console.log("submitting form", files)
+    if(files.value){
         isUploading.value = "Uploading..."
-        if(modifiedProduct){
-            console.log(modifiedProduct)
+        const response = await uploadFile()
+        isUploading.value = "Uploaded"
+        if(response.url){
+            const newProduct  = {
+                name: value.name,
+                price: value.price,
+                description: value.describe,
+                inventory: value.inventory,
+                image: response.url,
+                isActive: isActive.value,
+                imageAlt: value.name
+            }
+            console.log(newProduct)
         }
+    }else{
+        const newProduct  = {
+            name: value.name,
+            price: value.price,
+            description: value.describe,
+            inventory: value.inventory,
+            image: product.image,
+            isActive: isActive.value,
+            imageAlt: value.name
+        }
+        console.log(newProduct)
+        const response = await productStore.updateProduct(newProduct)
+        console.log("update response", response)
+    }
    }
     const handleClear = ()=>{
         isUploading.value = '';
-        productImage.value = product.image
-        form.setFieldValue('image', null)
+        reset()
     }
 
 

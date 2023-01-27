@@ -30,11 +30,9 @@
     "flowbite": "^1.6.2",
     "jsonwebtoken": "^9.0.0",
     "luxon": "^3.2.1",
-    "nuxt-vuefire": "^0.1.5",
     "pinia": "^2.0.29",
     "uuid": "^9.0.0",
     "vee-validate": "^4.7.3",
-    "vuefire": "^3.0.1",
     "yup": "^0.32.11"
   }
 }

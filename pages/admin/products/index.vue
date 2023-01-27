@@ -68,10 +68,13 @@
 </template>
 
 <script >
+import { useProducts } from '~~/stores/products'
+
     export default {
         async setup(){
-            const {data} = await useFetch('/api/products')
-            const products = data.value
+            const productsStore = useProducts();
+            await productsStore.getProducts()
+            const products = productsStore.products
             definePageMeta({
                 middleware: 'admin'
             })

@@ -1,11 +1,9 @@
 import { decodeT } from "~~/utils/jwt";
 export default defineEventHandler(async (event) => {
-  console.log("Fetching Data", new Date());
   try {
     const body = await readBody(event);
     const token = body;
     const data = await decodeT(token);
-    console.log("data", data);
     const returnData = {
       id: data.id,
       email: data.email,

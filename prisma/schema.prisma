@@ -108,7 +108,7 @@ model Products{
   description String
   image     String
   imageAlt  String
-  inventory Int @default(0)
+  inventory Float @default(0)
   carts     CartProducts[]
   isActive  Boolean @default(true)
 }
