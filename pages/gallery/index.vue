@@ -1,41 +1,74 @@
-<template>
-    <div class="text-3xl min-w-full flex flex-col justify-center text-center relative">
-        <span class="text-7xl">GALLERY</span>
-        <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            <div v-for="image in galleryImages" :key="image.id" @click="()=>{handleImagePop(image)}">
-                <img :src="image.imgsrc" :alt="image.alt" />
-            </div>
-        </div>
-        <div v-if="popUp" class="z-50 bg-gray-500">
-            <div class="z-50 bg-gray-500/80 min-w-full min-h-screen absolute top-0 left-0 flex justify-center items-center" @click="handleImagePopClose" >
-                <img :src="popImage.imgsrc" :alt="popImage.alt" class="w-640 h-480"/>
-            </div>
-        </div>
-    </div>
 
+<template>
+    <div class="relative w-full h-full">
+        <Carousel :settings="settings" :breakpoints="breakpoints">
+            <Slide v-for="slide in galleryImages" :key="slide">
+            <div >
+                <button @click="()=>{handleClick(slide)}">
+                <img :src="slide.imgsrc" :alt="slide.name" class="border border-secondary" />
+                </button>
+            </div>
+            </Slide>
+            <template #addons>
+            <Navigation />
+            </template>
+        </Carousel>
+    </div>
+    <div class="z-50 w-[100vw] h-[100vh] left-0 top-0 absolute " :hidden="PopUp">
+        <span>Pop Up</span>
+    </div>
 </template>
 
-<script>
 
+<script>
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/vue/24/solid';
+import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
+import '~/assets/css/carousel.css'
+import {useGallery} from '~/stores/gallery'
 
 export default {
-    setup () {
-        let popImage = ref({imgsrc:"",alt:"",url:""});
-        let popUp = ref(false);
-        const {data, pending} = useFetch('/api/gallery')
-        const galleryImages = data.value
+    components:{
+        ChevronDoubleLeftIcon,
+        ChevronDoubleRightIcon,
+        Carousel, 
+        Navigation, 
+        Pagination, 
+        Slide
+    },
+    async setup () {
+        let galleryStore = useGallery()
+        await galleryStore.getImages()
+        let selectedImage = ref('');
+        let PopUp = ref(false);
+        let galleryImages = galleryStore.galleryImages
+        let settings = {
+            itemsToShow: 1,
+            snapAlign: 'center',
+        }
+        let breakpoints = {
+            500: {
+                itemsToShow: 1.5,
+                snapAlign: 'center'
+            },
+            700: {
+                itemsToShow: 2.5,
+                snapAlign: 'center',
+            },
+            1024: {
+                itemsToShow: 5,
+                snapAlign: 'start',
+            },
+        }
+        const handleClick = (slide)=>{
+            selectedImage.value = slide
+            handlePop();
+        }
+        const handlePop = ()=>{
+            PopUp.value = !PopUp.value
+        }
 
-        const handleImagePop = ref((image)=>{
-            popUp.value=true
-            popImage.value = image
-        })
-        const handleImagePopClose = ref((image)=>{
-            popImage.value = null;
-            popUp.value = false;
-        })
-    
         return {
-           galleryImages, popImage, popUp, handleImagePop, handleImagePopClose
+           galleryImages, settings, breakpoints, handleClick, selectedImage, PopUp, handlePop
         }
     }
 }

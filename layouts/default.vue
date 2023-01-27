@@ -9,7 +9,6 @@
         <div class="flex flex-row relative"> 
             <div class="container flex flex-col bg-primary min-w-full ">
                 <div class="max-h-[80vh] min-h-[80vh] ml-20 max-sm:ml-2 max-sm:min-h-[80vh] p-24 overflow-y-scroll z-0 ">
-                    {{ auth.user?.role }}
                     <slot />
                 </div>
             </div>

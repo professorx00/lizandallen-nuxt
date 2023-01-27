@@ -8,6 +8,14 @@ export const useProducts = defineStore("products", {
       this.products = data.value;
       return data.value;
     },
+    async createProduct(product){
+      const {data} = await useFetch('/api/products/create', {method: 'POST', body: product})
+      return data.value
+    },
+    async deleteProduct(id){
+      const {data} = await useFetch('/api/products/delete', {method: "POST", body:{id:id}})
+      return data.value
+    },
     async getProductById(id) {
       const { data } = await useFetch(`/api/products/${id}`);
       return data.value;

@@ -1,5 +1,6 @@
 <template>
     <div class="text-3xl min-w-11/12 flex flex-col justify-center items-center text-center">
+        <div class="w-full flex flex-row justify-end items-center text-right px-36"><NuxtLink to="/admin/create_product" class="bg-secondary px-3 py-1 m-2 shadow-md shadow-black hover:bg-slate-500 hover:shadow-none rounded-lg">Add New</NuxtLink></div>
         <table class="w-10/12 text-left text-gray-500 ">
             <thead class=" text-gray-700 uppercase bg-gray-50 ">
                 <tr>
@@ -59,7 +60,8 @@
                         {{ product.isActive}}
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <NuxtLink :to="`/admin/products/${product.id}`">Modify</NuxtLink>
+                        <NuxtLink class="bg-secondary px-3 py-1 m-2 shadow-md shadow-black text-black hover:bg-slate-500 hover:shadow-none rounded-lg" :to="`/admin/products/${product.id}`">Modify</NuxtLink>
+                        <button class="bg-secondary px-3 m-2 shadow-md shadow-black text-black hover:bg-slate-500 hover:shadow-none rounded-lg" @click="async ()=>{await handleDelete(product.id)}">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -69,16 +71,20 @@
 
 <script >
 import { useProducts } from '~~/stores/products'
-
     export default {
         async setup(){
-            const productsStore = useProducts();
-            await productsStore.getProducts()
-            const products = productsStore.products
             definePageMeta({
                 middleware: 'admin'
             })
-            return {products}
+            const productsStore = useProducts();
+            await productsStore.getProducts()
+            const products = ref(productsStore.products)
+            const handleDelete = async (id)=>{
+                const updated = await productsStore.deleteProduct(id)
+                console.log(updated)
+                products.value = await productsStore.getProducts();
+            }
+            return {products, handleDelete}
         }
     }
 </script>

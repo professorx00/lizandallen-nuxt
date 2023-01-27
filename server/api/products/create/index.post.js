@@ -1,10 +1,9 @@
 import db from "~~/stores/db";
 
 export default defineEventHandler(async (event) => {
-  const { id, name, price, description, image, imageAlt, inventory, isActive } =
+  const { name, price, description, image, imageAlt, inventory, isActive } =
     await readBody(event);
   const product = {
-    id:parseInt(id),
     name,
     price: parseFloat(price),
     description,
@@ -12,10 +11,10 @@ export default defineEventHandler(async (event) => {
     imageAlt,
     inventory: parseInt(inventory),
     isActive,
+    updatedAt: new Date()
   };
-  const updatedProduct = await db.products.update({
-    where: { id: parseInt(id) },
+  const newProduct = await db.products.create({
     data: product,
   });
-  return updatedProduct;
+  return newProduct;
 });

@@ -9,6 +9,9 @@ module.exports = {
     "./app.vue",
     "./node_modules/flowbite.{js,ts}",
   ],
+  plugins: [
+    require('flowbite')
+  ],
   theme: {
     extend: {
       colors: {
