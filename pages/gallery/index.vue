@@ -14,8 +14,11 @@
             </template>
         </Carousel>
     </div>
-    <div class="z-50 w-[100vw] h-[100vh] left-0 top-0 absolute " :hidden="PopUp">
-        <span>Pop Up</span>
+    <div class="z-50 w-[100vw] h-[100vh] left-0 top-0 absolute flex flex-col justify-center items-center text-center bg-black/50 text-6xl" :class="PopUp ? 'hidden': 'flex'">
+        <div class="bg-white flex flex-col p-5 justify-center items-center text-center">
+            <button @click="handlePop"><img :src="selectedImage?.imgsrc"/>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -39,7 +42,7 @@ export default {
         let galleryStore = useGallery()
         await galleryStore.getImages()
         let selectedImage = ref('');
-        let PopUp = ref(false);
+        let PopUp = ref(true);
         let galleryImages = galleryStore.galleryImages
         let settings = {
             itemsToShow: 1,
